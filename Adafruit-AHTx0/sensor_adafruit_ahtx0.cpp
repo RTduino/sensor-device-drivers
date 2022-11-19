@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2021-2022, RTduino Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-11-19     Meco Man     first version
+ */
+
 #include <rtdevice.h>
 #include <Adafruit_AHTX0.h>
 

@@ -15,11 +15,9 @@
 #define DBG_LVL DBG_INFO
 #include <rtdbg.h>
 
-static Adafruit_AHTX0 aht;
-
-static rt_err_t adafruit_ahtx0_init(void)
+static rt_err_t adafruit_ahtx0_init(Adafruit_AHTX0* ahtx0_dev)
 {
-    if (!aht.begin())
+    if (!ahtx0_dev->begin())
     {
         return -RT_ENOSYS;
     }
@@ -29,7 +27,8 @@ static rt_err_t adafruit_ahtx0_init(void)
 static rt_ssize_t adafruit_ahtx0_polling_get_data(rt_sensor_t sensor, rt_sensor_data_t data)
 {
     sensors_event_t humidity, temp;
-    aht.getEvent(&humidity, &temp); /* populate temp and humidity objects with fresh data */
+    Adafruit_AHTX0 *ahtx0_dev = (Adafruit_AHTX0 *)sensor->parent.user_data;
+    ahtx0_dev->getEvent(&humidity, &temp); /* populate temp and humidity objects with fresh data */
 
     if (sensor->info.type == RT_SENSOR_TYPE_TEMP)
     {
@@ -83,7 +82,11 @@ static int rt_hw_ahtx0_init(void)
     rt_int8_t result;
     rt_sensor_t sensor_temp = RT_NULL, sensor_humi = RT_NULL;
 
-    if (adafruit_ahtx0_init() != RT_EOK)
+    Adafruit_AHTX0* ahtx0_dev =  new Adafruit_AHTX0;
+    if (ahtx0_dev == RT_NULL)
+        return -1;
+
+    if (adafruit_ahtx0_init(ahtx0_dev) != RT_EOK)
         return -1;
 
      /* temperature sensor register */
@@ -110,7 +113,7 @@ static int rt_hw_ahtx0_init(void)
 
     sensor_temp->ops = &sensor_ops;
 
-    result = rt_hw_sensor_register(sensor_temp, sensor_name, RT_DEVICE_FLAG_RDONLY, RT_NULL);
+    result = rt_hw_sensor_register(sensor_temp, sensor_name, RT_DEVICE_FLAG_RDONLY, ahtx0_dev);
     if (result != RT_EOK)
     {
         LOG_E("device register err code: %d", result);
@@ -143,7 +146,7 @@ static int rt_hw_ahtx0_init(void)
 
     sensor_humi->ops = &sensor_ops;
 
-    result = rt_hw_sensor_register(sensor_humi, sensor_name, RT_DEVICE_FLAG_RDONLY, RT_NULL);
+    result = rt_hw_sensor_register(sensor_humi, sensor_name, RT_DEVICE_FLAG_RDONLY, ahtx0_dev);
     if (result != RT_EOK)
     {
         LOG_E("device register err code: %d", result);
@@ -157,7 +160,8 @@ __exit:
         rt_free(sensor_temp);
     if (sensor_humi)
         rt_free(sensor_humi);
-
+    if (ahtx0_dev)
+        delete ahtx0_dev;
     return -RT_ERROR;
 }
 INIT_ENV_EXPORT(rt_hw_ahtx0_init);

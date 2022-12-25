@@ -109,7 +109,7 @@ static int rt_hw_ahtx0_init(void)
     sensor_temp->config.intf.dev_name = Wire._i2c_bus_dev->parent.parent.name;
     sensor_temp->config.intf.type = RT_SENSOR_INTF_I2C;
     sensor_temp->config.intf.arg = RT_NULL;
-    sensor_temp->config.irq_pin.pin = RT_PIN_NONE;
+    sensor_temp->config.irq_pin.pin = PIN_IRQ_PIN_NONE;
 
     sensor_temp->ops = &sensor_ops;
 
@@ -142,7 +142,7 @@ static int rt_hw_ahtx0_init(void)
     sensor_humi->config.intf.dev_name = Wire._i2c_bus_dev->parent.parent.name;
     sensor_humi->config.intf.type = RT_SENSOR_INTF_I2C;
     sensor_humi->config.intf.arg = RT_NULL;
-    sensor_humi->config.irq_pin.pin = RT_PIN_NONE;
+    sensor_humi->config.irq_pin.pin = PIN_IRQ_PIN_NONE;
 
     sensor_humi->ops = &sensor_ops;
 

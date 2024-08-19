@@ -102,7 +102,7 @@ int rt_hw_sht31_init(void)
     sensor_temp->info.scale.range_min = -40.0;
     sensor_temp->info.scale.range_max = 85.0;
 
-    sensor_temp->config.intf.dev_name = Wire._i2c_bus_dev->parent.parent.name;
+    sensor_temp->config.intf.dev_name = Wire.getBusDevice()->parent.parent.name;
     sensor_temp->config.intf.type = RT_SENSOR_INTF_I2C;
     sensor_temp->config.intf.arg = RT_NULL;
     sensor_temp->config.irq_pin.pin = PIN_IRQ_PIN_NONE;
@@ -135,7 +135,7 @@ int rt_hw_sht31_init(void)
     sensor_humi->info.scale.range_min = 0.0;
     sensor_humi->info.scale.range_max = 100.0;
 
-    sensor_humi->config.intf.dev_name = Wire._i2c_bus_dev->parent.parent.name;
+    sensor_humi->config.intf.dev_name = Wire.getBusDevice()->parent.parent.name;
     sensor_humi->config.intf.type = RT_SENSOR_INTF_I2C;
     sensor_humi->config.intf.arg = RT_NULL;
     sensor_humi->config.irq_pin.pin = PIN_IRQ_PIN_NONE;
